@@ -1,0 +1,1 @@
+# eBPF: Drop *icmp* packets with XDP
