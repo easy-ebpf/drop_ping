@@ -10,6 +10,11 @@ all: drop_ping.bpf.o
 $(APPS): %: %.c %.bpf.o %.skel.h
 	$(CC) $(CFLAGS) $(filter %.c,$^) $(LDLIBS) -o $@
 
+drop_ping.bpf.o: vmlinux.h
+
+vmlinux.h:
+	bpftool btf dump file /sys/kernel/btf/vmlinux format c > vmlinux.h
+
 %.bpf.o: %.bpf.c
 	$(CC) $(CFLAGS) -c -target bpf $< -o $@
 
@@ -18,3 +23,4 @@ $(APPS): %: %.c %.bpf.o %.skel.h
 
 clean:
 	rm -f $(BPF_APPS) *.o *.skel.h
+	rm -f vmlinux.h
